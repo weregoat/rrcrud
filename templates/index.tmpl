@@ -1,0 +1,28 @@
+{{ define "index" }}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>RedRiver CRUD test</title>
+</head>
+<body>
+    <h2> Members </h2>
+    <table border="1">
+      <thead>
+      <tr>
+        <td>ID</td>
+        <td>Name</td>
+        <td>Registered</td>
+      </tr>
+       </thead>
+       <tbody>
+    {{ range . }}
+      <tr>
+        <td>{{ .ID }}</td>
+        <td>{{ .Name }}</td>
+        <td>{{ .RegistrationTime }} </td>
+      </tr>
+    {{ end }}
+       </tbody>
+    </table>
+{{ end }}

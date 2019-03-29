@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/gorilla/mux"
 	"github.com/satori/go.uuid"
+	"html/template"
 	"log"
 	"time"
 )
@@ -29,11 +30,13 @@ type Member struct {
 
 var members map[string]Member
 
+var tmpl = template.Must(template.ParseGlob("templates/*.tmpl"))
+
 func main() {
 	members = make(map[string]Member)
 	router := mux.NewRouter()
 	router.HandleFunc("/", func(writer http.ResponseWriter, request *http.Request) {
-		http.Redirect(writer, request, "/members/", http.StatusSeeOther)
+		tmpl.ExecuteTemplate(writer, "index", members)
 	})
 	router.HandleFunc("/members/", getMembers).Methods(http.MethodGet)
 	router.HandleFunc("/member/{id}", getMember).Methods(http.MethodGet)
