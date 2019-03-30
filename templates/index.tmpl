@@ -1,28 +1,59 @@
 {{ define "index" }}
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
     <title>RedRiver CRUD test</title>
-</head>
-<body>
-    <h2> Members </h2>
+  </head>
+  <body>
+    <h2> List of members </h2>
     <table border="1">
       <thead>
       <tr>
-        <td>ID</td>
+        <td>Edit</td>
         <td>Name</td>
-        <td>Registered</td>
+        <td>Delete</td>
       </tr>
        </thead>
        <tbody>
-    {{ range . }}
+    {{ range .Members }}
       <tr>
-        <td>{{ .ID }}</td>
+        <td>
+            <form method="POST" action="/edit?id={{ .ID }}">
+                <input type="submit" value="Edit" />
+            </form>
+        </td>
         <td>{{ .Name }}</td>
-        <td>{{ .RegistrationTime }} </td>
+        <td>
+            <form method="POST" action="/delete?id={{ .ID }}">
+                <input type="submit" value="Delete"/>
+            </form>
+        </td>
+      </tr>
+    {{ else }}
+      <tr>
       </tr>
     {{ end }}
        </tbody>
     </table>
+        {{ if .Member.ID }}
+           <h2>Update member {{ .Member.ID }}</h2>
+           <form method="POST" action="update">
+               <div>
+                  <input type="submit" value="Change name"/>
+                  <input type="hidden" name="id" value="{{ .Member.ID }}" />
+                  <input type="text" name="name" value="{{ .Member.Name }}" />
+               </div>
+           <form>
+        {{ else }}
+            <h2>Add new member</h2>
+            <form method="POST" action="new">
+                <div>
+                    <input type="submit" value="Add member">
+                    <input type="text" name="name"/>
+                </div>
+            <form>
+        {{ end }}
+  </body>
+</html>
 {{ end }}
