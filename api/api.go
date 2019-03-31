@@ -246,6 +246,7 @@ func getPayload(members map[string]storage.Member, APIError *Error) ([]byte, err
 	return payload, error
 }
 
+// updateError is just a wrapper for updating the error struct.
 func updateError(apiError *Error, code int, message string) int {
     apiError.Code = code
 	apiError.Message = message
