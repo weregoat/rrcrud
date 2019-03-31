@@ -78,7 +78,7 @@ Or an "error":
 }
 ```
 
-The "timestamp" element should always be present, if a payload is given (as is not the case with DELETE operations).
+Not all responses have a JSON body, but when they do the "timestamp" element should always be present.
 
 As for request payloads:
 ```json
