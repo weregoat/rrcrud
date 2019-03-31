@@ -18,7 +18,7 @@ Two such files are provided in the `templates` directory; you can just copy them
 the `-templates` option.
 
 ## Bolt database
-The application uses a "permanent" storage in the form of a BoldDb database file (`members.db`). The directory for such file should be specified through the `-bolddb` option.
+The application uses a "permanent" storage in the form of a BoldDb database file (`members.db`). The directory for such file should be specified through the `-boltdb` option.
 
 ## Options
 
