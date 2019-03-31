@@ -80,18 +80,3 @@ func Get(db *bolt.DB, id string) (Member, error) {
 	return member, err
 }
 
-// CheckID just checks that there is data in the database under the given key.
-// It does not try to unmarshal the data as GetMember would.
-func CheckID(db *bolt.DB, id string) (bool, error) {
-	exists := false
-	err := db.View(func(tx *bolt.Tx) (err error) {
-		bucket := tx.Bucket(MembersBucket)
-		data := bucket.Get([]byte(id))
-		if data != nil {
-			exists = true
-			return nil
-		}
-		return
-	})
-	return exists, err
-}
