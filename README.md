@@ -85,3 +85,9 @@ As for request payloads:
 {"name":"Luther Blissett"}
 ```
 is all you need (everything else is ignored).
+
+## Tests
+
+No unit tests are provided. Not because I am oblivious to their use, but because the scope of this exercise and the fact that I am not a TDD follower didn't, IMHO, justify the work required.
+
+On the other hand, `curl` works very well for testing the API and any browser (even text ones) should work with the static site.
