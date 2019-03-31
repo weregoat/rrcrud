@@ -1,3 +1,4 @@
+// Package storage handles the functions for processing members' records in the BoltDB database
 package storage
 
 import (
@@ -5,13 +6,16 @@ import (
 	"github.com/boltdb/bolt"
 )
 
+// Member defines the structure of the member record.
 type Member struct {
 	ID   string `json:"id,omitempty"`
 	Name string `json:"name,omitempty"`
 }
 
+// MembersBucket defines the bucket to use for members' records.
 var MembersBucket = []byte("members")
 
+// GetMembers returns all the members in the database.
 func GetMembers(db *bolt.DB) (map[string]Member, error) {
 	members := make(map[string]Member)
 	err := db.View(func(tx *bolt.Tx) (err error) {
@@ -29,6 +33,7 @@ func GetMembers(db *bolt.DB) (map[string]Member, error) {
 	return members, err
 }
 
+// Update replaces the record in the database with the same ID
 func Update(db *bolt.DB, member Member) error {
 	err := db.Update(func(tx *bolt.Tx) error {
 		bucket, err := tx.CreateBucketIfNotExists(MembersBucket)
@@ -48,6 +53,7 @@ func Update(db *bolt.DB, member Member) error {
 	return err
 }
 
+// Delete removes from the database a record with the given ID.
 func Delete(db *bolt.DB, id string) error {
 	err := db.Update(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket(MembersBucket)
@@ -57,6 +63,7 @@ func Delete(db *bolt.DB, id string) error {
 	return err
 }
 
+// Get returns the member with the given ID from the database.
 func Get(db *bolt.DB, id string) (Member, error) {
 	member := Member{}
 	err := db.View(func(tx *bolt.Tx) (err error) {
@@ -73,6 +80,8 @@ func Get(db *bolt.DB, id string) (Member, error) {
 	return member, err
 }
 
+// CheckID just checks that there is data in the database under the given key.
+// It does not try to unmarshal the data as GetMember would.
 func CheckID(db *bolt.DB, id string) (bool, error) {
 	exists := false
 	err := db.View(func(tx *bolt.Tx) (err error) {

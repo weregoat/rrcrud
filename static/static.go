@@ -1,3 +1,4 @@
+// Package static handles functions related to the static CRUD website.
 package static
 
 import (
@@ -10,6 +11,14 @@ import (
 	"strings"
 )
 
+// IndexTemplate defines the name for the template to be used with the root page.
+// It also defines the template filename (with a .tmpl) attached.
+const IndexTemplate = "index"
+
+// ErrorTemplate defines the name for the template to be used with the error page.
+// It also defines the template filename (with a .tmpl) attached.
+const ErrorTemplate = "error"
+
 // Static "Class" for handling static website
 type Static struct {
 	BoltDB   *bolt.DB
@@ -17,30 +26,30 @@ type Static struct {
 	Port     string
 }
 
-// Arguments to use with the template
+// TemplateArgument defines the arguments to use with the templates
 type TemplateArgument struct {
 	Members map[string]storage.Member
 	Port    string
 	Member  storage.Member
 }
 
-// Initialise new static handler
+// New initialises a new static handler
 func New(db *bolt.DB, tmpl *template.Template, port string) Static {
 	static := Static{BoltDB: db, Template: tmpl, Port: port}
 	return static
 }
 
-// Common function to print an error
+// PrintError is a shared function to return an error through the error template (error.tmpl).
 func (static Static) PrintError(writer http.ResponseWriter, status int, message string) {
 	writer.WriteHeader(status)
 	error := api.Error{
 		Code:    status,
 		Message: message,
 	}
-	static.Template.ExecuteTemplate(writer, "error", error)
+	static.Template.ExecuteTemplate(writer, ErrorTemplate, error)
 }
 
-// Create new member
+// NewMember created a new member with the given name and a new UUID.
 func (static Static) NewMember(writer http.ResponseWriter, request *http.Request) {
 	name := strings.TrimSpace(request.FormValue("name"))
 	if len(name) <= 0 {
@@ -64,7 +73,7 @@ func (static Static) NewMember(writer http.ResponseWriter, request *http.Request
 	http.Redirect(writer, request, "/", http.StatusSeeOther)
 }
 
-// List all the members in the database
+// ListMembers lists all the members in the database
 func (static Static) ListMembers(writer http.ResponseWriter, request *http.Request) {
 	arguments := TemplateArgument{
 		Port: static.Port,
@@ -81,10 +90,10 @@ func (static Static) ListMembers(writer http.ResponseWriter, request *http.Reque
 			arguments.Member = member
 		}
 	}
-	static.Template.ExecuteTemplate(writer, "index", arguments)
+	static.Template.ExecuteTemplate(writer, IndexTemplate, arguments)
 }
 
-// Delete one member from the database
+// DeleteMember deletes one member from the database
 func (static Static) DeleteMember(writer http.ResponseWriter, request *http.Request) {
 	id := request.URL.Query()["id"][0]
 	if len(id) > 0 {
@@ -97,7 +106,7 @@ func (static Static) DeleteMember(writer http.ResponseWriter, request *http.Requ
 	http.Redirect(writer, request, "/", http.StatusSeeOther)
 }
 
-// Change member name
+// UpdateMember replaces the member in the database with the same ID
 func (static Static) UpdateMember(writer http.ResponseWriter, request *http.Request) {
 	id := strings.TrimSpace(request.FormValue("id"))
 	if len(id) > 0 {
