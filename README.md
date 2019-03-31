@@ -8,8 +8,29 @@ It's a GoLang application without modules, so you need to build it etc.
 If you already know, how to do it, skip the following, which is just a
 summary of what you can read from the [Go documentation](https://golang.org/cmd/go/#hdr-Compile_packages_and_dependencies) 
 
- For example, from the directory were `main.go` is: 
- `go build -x -o /tmp/rrcrud` 
+For example, from the directory were `main.go` is: 
+ 
+ ```
+go build -o /tmp/rrcrud
+cp -r templates /tmp/
+cd /tmp 
+./rrcrud -h
+ Usage of ./rrcrud:
+   -boltdb string
+     	directory for the members.db bolt database (default "/tmp/")
+   -noapi
+     	do no route the API endpoints
+   -nostatic
+     	do not route the static endpoints
+   -port string
+     	listening port (default "8080")
+   -templates string
+     	directory with the .tmpl template files (default "./templates/")
+./rrcrud 
+ 2019/03/31 12:51:54 defined static routes
+ 2019/03/31 12:51:54 defined API routes
+ 2019/03/31 12:51:54 listening and serving from port 8080
+```
  
 ## Moving template files
 The static website requires two template files; one for the root page `index.tmpl` and one for the error page `error.tmpl`. It will not start if they are missing or are invalid.
