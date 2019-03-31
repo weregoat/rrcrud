@@ -39,5 +39,49 @@ Usage of ./rrcrud:
   -templates string
     	directory with the .tmpl template files (default "./templates/")
 ```
+## Static site
+Root page is at `/` on the specified port.
 
+## API
+The API paths are under the `/api/` root:
+* `/api/members` (GET) will return a list of all the members.
+* `/api/member/` (POST) will create a new member with the name as specified in the "name" field of the payload. 
+* `/api/member/{id}` (GET) will return a list containing only the member with the given ID.
+* `/api/member/{id}` (PUT) will replace the name of the member with the one provided in the "name" field on the JSON payload.
+* `/api/member/{id}` (DELETE) will removed the member with the given ID.
 
+The JSON response payload may either include a "members" element:
+
+```json
+{
+    "members":{
+      "0e044154-5042-42f9-8d9c-ed03bde85360":{
+        "id":"0e044154-5042-42f9-8d9c-ed03bde85360","name":"Natty Bumppo"
+      },
+      "341533a5-94f6-46d1-83d5-d82365daa17f":{
+        "id":"341533a5-94f6-46d1-83d5-d82365daa17f","name":"Luther Blissett"
+      }
+    },
+    "timestamp":"2019-03-31T10:17:50.487129827Z"
+}
+```
+
+Or an "error":
+
+```json
+{
+  "error":{
+    "code":404,
+    "message":"no member with ID 341533a5-94f6-46d1-83d5-d82365daa17g"
+  },
+  "timestamp":"2019-03-31T10:21:36.015167131Z"
+}
+```
+
+The "timestamp" element should always be present, if a payload is given (as is not the case with DELETE operations).
+
+As for request payloads:
+```json
+{"name":"Luther Blissett"}
+```
+is all you need (everything else is ignored).
